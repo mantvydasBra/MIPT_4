@@ -1,5 +1,7 @@
 package com.example.mipt4;
 
+import static com.example.mipt4.Information.information;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -35,18 +37,21 @@ public class AddNoteActivity extends AppCompatActivity {
                 return;
             }
 
+            // If it's a new note
             if (selectedNote == null) {
                 int id = Note.noteArrayList.size();
 
                 Note newNote = new Note(id, title, desc);
                 Note.noteArrayList.add(newNote);
                 sqLiteManager.addNote(newNote);
+                information = "Note created: " + title + " - " + desc;
             }
-
+            // Updating existing note
             else {
                 selectedNote.setTitle(title);
                 selectedNote.setDescription(desc);
                 sqLiteManager.updateNoteInDB(selectedNote);
+                information = "Note edited: " + title + " - " + desc;
             }
             finish();
         });
@@ -70,6 +75,7 @@ public class AddNoteActivity extends AppCompatActivity {
             SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
             selectedNote.setDeleted();
             sqLiteManager.updateNoteInDB(selectedNote);
+            information = "Note deleted";
             Log.d("[ DEBUG ]", "deleted from database: " + selectedNote.getTitle());
         }
         finish();

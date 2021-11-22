@@ -1,6 +1,7 @@
 package com.example.mipt4;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
         title.setText(note.getTitle());
         desc.setText(note.getDescription());
+        Log.d("[ DEBUG ]", "convertView Created!");
         return convertView;
     }
 }
