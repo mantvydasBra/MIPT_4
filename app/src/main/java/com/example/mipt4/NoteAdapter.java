@@ -18,6 +18,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         super(context, 0, notes);
     }
 
+    // Main function which fills main screen with note cells
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

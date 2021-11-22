@@ -1,6 +1,5 @@
 package com.example.mipt4;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -22,12 +21,11 @@ public class SQLiteManager extends SQLiteOpenHelper {
     private static final String DESC_FIELD = "Description";
     private static final String DELETED_FIELD = "Deleted";
 
-
-
     public SQLiteManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Creates database if it doesn't exist
     public static SQLiteManager instanceOfDatabase(Context context) {
         if (sqlManager == null)
             sqlManager = new SQLiteManager(context);
@@ -35,6 +33,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         return sqlManager;
     }
 
+    // If first time opening app - create table
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         StringBuilder sql;
@@ -59,6 +58,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     }
 
+    // dummy function to silence the error
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 //        switch (oldVersion) {
@@ -68,6 +68,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     }
 
+    // Basic function to add notes to database
     public void addNote(Note note) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -78,33 +79,31 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put(DELETED_FIELD, 0);
 
         sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
+        Log.d("[ DEBUG ]", "SQLiteManager: Note added!");
     }
 
-    public void deleteNoteFromDB(int id) {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + " id = " + id);
-    }
+    // Great code for debugging SQL
+//    @SuppressLint("Range")
+//    public void printTableForTesting() {
+//        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+//        Log.d("DbHelper", "getTableAsString called");
+//        String tableString = String.format("Table %s:\n", TABLE_NAME);
+//        Cursor allRows  = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+//        if (allRows.moveToFirst() ){
+//            String[] columnNames = allRows.getColumnNames();
+//            do {
+//                for (String name: columnNames) {
+//                    tableString += String.format("%s: %s\n", name,
+//                            allRows.getString(allRows.getColumnIndex(name)));
+//                }
+//                tableString += "\n";
+//
+//            } while (allRows.moveToNext());
+//        }
+//        System.out.println(tableString);
+//    }
 
-    @SuppressLint("Range")
-    public void printTableForTesting() {
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Log.d("DbHelper", "getTableAsString called");
-        String tableString = String.format("Table %s:\n", TABLE_NAME);
-        Cursor allRows  = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        if (allRows.moveToFirst() ){
-            String[] columnNames = allRows.getColumnNames();
-            do {
-                for (String name: columnNames) {
-                    tableString += String.format("%s: %s\n", name,
-                            allRows.getString(allRows.getColumnIndex(name)));
-                }
-                tableString += "\n";
-
-            } while (allRows.moveToNext());
-        }
-        System.out.println(tableString);
-    }
-
+    // Calls on startup to populate listView with Notes from database (makes persistent notes)
     public void loadFromDB() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
@@ -113,7 +112,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
                 while (result.moveToNext()) {
                     int id = result.getInt(1);
                     String title = result.getString(2);
-                    Log.d("TESTINGTESTING", "ID: " + id + " title " + title);
+                    Log.d("[ DEBUG ]", "ID: " + id + " title " + title);
 
                     String desc = result.getString(3);
                     int deleted = result.getInt(4);
@@ -125,12 +124,14 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
-    public void dropDBForTesting() {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL("DROP TABLE " + TABLE_NAME);
+    // Function for debugging - used for deleting table records and dropping whole table
+//    public void dropDBForTesting() {
+//        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+//        sqLiteDatabase.execSQL("DROP TABLE " + TABLE_NAME);
+//
+//    }
 
-    }
-
+    // Updates specific note in database
     public void updateNoteInDB(Note note) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -142,5 +143,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
         sqLiteDatabase.update(TABLE_NAME, contentValues, ID_FIELD + " =?",
                 new String[]{String.valueOf(note.getId())});
 
+        Log.d("[ DEBUG ]", "SQLiteManager: Note updated!");
+
     }
+
 }
