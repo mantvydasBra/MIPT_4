@@ -1,5 +1,7 @@
 package com.example.mipt4;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Note {
@@ -10,11 +12,20 @@ public class Note {
     private int id;
     private String title;
     private String description;
+    private int deleted;
+
+    public Note(int id, String title, String description, int deleted) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.deleted = deleted;
+    }
 
     public Note(int id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.deleted = 0;
     }
 
     public static Note getNoteForID(int passedNoteID) {
@@ -33,6 +44,16 @@ public class Note {
                 return i;
         }
         return -1;
+    }
+
+    public static ArrayList<Note> nonDeletedNotes() {
+        ArrayList<Note> nonDeleted = new ArrayList<>();
+        for (Note note : noteArrayList) {
+            if (note.deleted != 1) {
+                nonDeleted.add(note);
+            }
+        }
+        return nonDeleted;
     }
 
     public int getId() {
@@ -57,5 +78,14 @@ public class Note {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted() {
+        this.deleted = 1;
+        Log.d("TESTINGTESTING", "setDeleted CALLED");
     }
 }

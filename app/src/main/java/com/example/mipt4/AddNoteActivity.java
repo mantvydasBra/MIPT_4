@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,8 @@ public class AddNoteActivity extends AppCompatActivity {
 
             if (selectedNote == null) {
                 int id = Note.noteArrayList.size();
+                Log.d("TESTINGTESTING", "noteArrayListSize: " + Note.noteArrayList.size());
+
                 Note newNote = new Note(id, title, desc);
                 Note.noteArrayList.add(newNote);
                 System.out.println(Note.noteArrayList.size());
@@ -45,13 +48,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 selectedNote.setDescription(desc);
                 sqLiteManager.updateNoteInDB(selectedNote);
             }
-//            Intent home = new Intent(this, MainActivity.class);
-//                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            startActivity(home);
             finish();
-//            System.out.println("HEYYY");
-//            ModifyNoteActivity.this.finish();
         });
 
         btnDelete.setOnClickListener(view -> deleteNote());
@@ -61,9 +58,15 @@ public class AddNoteActivity extends AppCompatActivity {
         System.out.println(Note.noteArrayList.get(0).getTitle());
         int indexOfNote = Note.getNoteIndex(selectedNote.getId());
         if (indexOfNote != -1) {
-            Note.noteArrayList.remove(indexOfNote);
             SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
-            sqLiteManager.deleteNoteFromDB(selectedNote.getId());
+            sqLiteManager.printTableForTesting();
+//            sqLiteManager.deleteNoteFromDB(selectedNote.getId());
+            selectedNote.setDeleted();
+            sqLiteManager.updateNoteInDB(selectedNote);
+            Log.d("TESTINGTESTING", "deleted from database: " + selectedNote.getTitle());
+//            Note.noteArrayList.remove(indexOfNote);
+            sqLiteManager.printTableForTesting();
+//            Log.d("TESTINGTESTING", "deleted from arrayList: " + selectedNote.getTitle());
         }
         finish();
     }

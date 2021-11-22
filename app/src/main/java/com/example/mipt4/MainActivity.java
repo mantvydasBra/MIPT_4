@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNoteAdapter() {
         Log.d("TESTINGTESTING", "NoteAdapter called");
-        NoteAdapter noteAdapter = new NoteAdapter(MainActivity.this, Note.noteArrayList);
+        NoteAdapter noteAdapter = new NoteAdapter(MainActivity.this, Note.nonDeletedNotes());
         lvNotes.setAdapter(noteAdapter);
     }
 }
