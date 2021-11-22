@@ -35,15 +35,11 @@ public class AddNoteActivity extends AppCompatActivity {
                 return;
             }
 
-            System.out.println(title);
-            System.out.println(desc);
-
             if (selectedNote == null) {
                 int id = Note.noteArrayList.size();
 
                 Note newNote = new Note(id, title, desc);
                 Note.noteArrayList.add(newNote);
-                System.out.println(Note.noteArrayList.size());
                 sqLiteManager.addNote(newNote);
             }
 
